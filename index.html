@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KILROY WAS HERE</title>
+  <style>
+    :root {
+      --text:#f4f4f4;
+      --nav:rgba(18,18,26,.9);
+      --accent:#ff3b5c;
+      --tape-bg:#ff3b5c;
+      --tape-text:#fff;
+      --box-bg:rgba(30,30,40,.65);
+      --glass:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.10);
+    }
+
+    body {
+      margin:0;
+      font-family:'Segoe UI', sans-serif;
+      color:var(--text);
+      background:
+        linear-gradient(-45deg,rgba(10,10,10,.85),rgba(26,26,26,.85)),
+        url("https://image.noelshack.com/fichiers/2025/36/3/1756921918-file-00000000b330620abdaa55ef764616be.jpg") repeat;
+      background-size:200px 200px, auto;
+      min-height:100vh;
+    }
+
+    /* Header image */
+    .hero { position:relative; overflow:hidden; }
+    .hero-img{
+      width:100%;
+      height:clamp(180px, 28vw, 360px);
+      object-fit:cover;
+      display:block;
+      filter:saturate(108%) contrast(103%);
+    }
+
+    .separator-thin {height:2px;background:var(--accent);opacity:.85;}
+
+    /* Accordion */
+    .accordion-wrap{
+      position:sticky; top:0; z-index:40;
+      backdrop-filter:blur(8px) saturate(140%);
+      background:rgba(0,0,0,.45);
+      box-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+    .accordion-bar {
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      color:#fff; font-weight:800; cursor:pointer;
+      border-top:2px solid var(--accent);
+      border-bottom:1px solid var(--line);
+      padding:14px 18px; letter-spacing:1px; font-size:1.05rem;
+      text-transform:uppercase; transition:background .25s;
+      user-select:none;
+    }
+    .accordion-bar:hover { background:rgba(255,59,92,.15); }
+    .chev{display:inline-block; transition:transform .25s ease;}
+    .accordion-bar[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+
+    .accordion-sheet {
+      border-top:1px solid var(--line);
+      border-bottom:2px solid var(--accent);
+      overflow:hidden; max-height:0; opacity:0; padding:0 14px;
+      transition:max-height .35s ease, opacity .3s ease, padding .3s ease;
+      background:rgba(18,18,26,.8);
+      backdrop-filter:blur(10px);
+    }
+    .accordion-sheet.open { opacity:1; padding:14px; }
+
+    .links{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px; max-width:1000px; margin:0 auto;
+    }
+    .accordion-btn {
+      padding:12px 14px; text-align:center;
+      border-radius:12px; background:var(--glass);
+      border:1px solid var(--line); color:#fff;
+      font-weight:800; text-decoration:none; cursor:pointer;
+      font-size:.95rem; text-transform:uppercase;
+      transition:all .25s ease;
+    }
+    .accordion-btn:hover {
+      background:rgba(255,59,92,.22);
+      border-color:var(--accent);
+      transform:translateY(-2px) scale(1.03);
+      box-shadow:0 6px 14px rgba(255,59,92,.25);
+    }
+
+    /* Warning tape */
+    .marquee {
+      overflow:hidden; white-space:nowrap;
+      background:var(--tape-bg); color:var(--tape-text);
+      font-weight:900; padding:16px; transform:rotate(-2deg);
+      margin:28px 0; letter-spacing:2px; font-size:1.2rem;
+      border-top:4px solid #000; border-bottom:4px solid #000;
+      text-align:center; text-transform:uppercase;
+      box-shadow:0 0 20px rgba(255,59,92,.7);
+      font-family:'Comic Sans MS', cursive;
+      animation:wiggle 2.5s ease-in-out infinite;
+    }
+    .marquee span { display:inline-block; padding-left:100%; animation:scroll 12s linear infinite; }
+    @keyframes scroll {0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+    @keyframes wiggle {0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(-3deg)}}
+
+    /* Stats */
+    .content {
+      max-width:1000px;margin:0 auto;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:24px;padding:20px;
+    }
+    .box {
+      background:var(--box-bg);
+      padding:26px;border-radius:14px;
+      backdrop-filter:blur(12px) saturate(140%);
+      text-align:center;
+      box-shadow:0 6px 16px rgba(0,0,0,.5);
+      transform:rotate(-1deg);
+      transition:transform .25s, box-shadow .25s;
+    }
+    .box:nth-child(even){transform:rotate(1deg);}
+    .box:hover {transform:scale(1.05) rotate(0deg); box-shadow:0 8px 18px rgba(255,59,92,.3);}
+    .box h3 {
+      margin:0 0 12px; font-size:1.4rem; color:var(--accent);
+      font-weight:900; font-family:'Comic Sans MS', cursive;
+    }
+    .box p { font-size:1.25rem; font-weight:bold; }
+
+    /* Live dot */
+    @keyframes blink {50%{opacity:.4}}
+    .live-dot { display:inline-block;width:8px;height:8px;border-radius:50%;background:#0f0;margin-left:6px;animation:blink 1s infinite; }
+
+    /* Flash + Pulse */
+    @keyframes flashGreen {0%{background-color:rgba(0,200,83,.35)}100%{background-color:transparent}}
+    @keyframes flashRed {0%{background-color:rgba(255,82,82,.35)}100%{background-color:transparent}}
+    @keyframes pulse {0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+    .flash-green{animation:flashGreen 1s ease}
+    .flash-red{animation:flashRed 1s ease}
+    .pulse{animation:pulse .6s ease}
+
+    /* Chart button */
+    .chart-btn {
+      display:block;margin:30px auto;padding:16px 32px;
+      background:var(--accent);color:#000;font-weight:900;
+      border-radius:10px;cursor:pointer;border:none;
+      transition:.25s;font-size:1.1rem;text-transform:uppercase;
+      box-shadow:0 0 14px rgba(255,59,92,.6);
+    }
+    .chart-btn:hover {transform:scale(1.08);background:#ff5f7a;}
+
+    /* Chart modal */
+    .chart-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75);
+      backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:.3s; z-index:500; }
+    .chart-overlay.open {opacity:1; pointer-events:auto;}
+    .chart-modal { background:rgba(30,30,40,.95); border-radius:16px; padding:14px;
+      max-width:95%; width:1000px; box-shadow:0 0 24px rgba(255,59,92,.7);
+      transform:scale(.85); transition:transform .3s; }
+    .chart-overlay.open .chart-modal{transform:scale(1);}
+    .chart-modal iframe{width:100%;height:500px;border:none;border-radius:8px;}
+    .chart-close { background:#ff5252; border:none; color:#fff; font-weight:bold;
+      border-radius:8px; padding:8px 14px; margin-bottom:10px; cursor:pointer; float:right; }
+
+    footer {
+      background:var(--nav); color:#aaa; text-align:center;
+      padding:20px; font-size:.95rem; border-top:2px solid var(--accent);
+      text-transform:uppercase; font-weight:800; letter-spacing:1px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="hero">
+    <img class="hero-img"
+         src="https://image.noelshack.com/fichiers/2025/36/3/1756921427-file-00000000e3bc620ab85c8a1d03e2a95d.jpg"
+         alt="Kilroy Header Art"/>
+  </header>
+  <div class="separator-thin"></div>
+
+  <!-- Accordion -->
+  <div class="accordion-wrap">
+    <div class="accordion-bar" id="accordionBar" aria-expanded="false">
+      <span>Menu</span> <span class="chev">▼</span>
+    </div>
+    <div class="accordion-sheet" id="accordionSheet" aria-hidden="true">
+      <div class="links">
+        <a class="accordion-btn" href="#" target="_blank">Twitter</a>
+        <a class="accordion-btn" href="#" target="_blank">Telegram</a>
+        <button class="accordion-btn" id="copyCA">📋 Copy Contract</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warning -->
+  <div class="marquee">
+    <span>⚠️ KILROY WAS HERE • PEEKING SINCE 1940 • KILROY WAS HERE ⚠️</span>
+  </div>
+
+  <!-- Stats -->
+  <section class="content">
+    <div class="box"><h3>💰 Price <span class="live-dot"></span></h3><p id="tokenPrice">—</p></div>
+    <div class="box"><h3>📊 Market Cap</h3><p id="tokenMcap">—</p></div>
+    <div class="box"><h3>📈 24h Volume</h3><p id="tokenVol">—</p></div>
+    <div class="box"><h3>💦 Liquidity</h3><p id="tokenLiq">—</p></div>
+  </section>
+
+  <!-- Chart -->
+  <button class="chart-btn" id="openChart">📊 View Chart</button>
+  <div class="chart-overlay" id="chartOverlay">
+    <div class="chart-modal">
+      <button class="chart-close" id="closeChart">✖ Close</button>
+      <iframe src="https://dexscreener.com/solana/DzuZqXyVzyBYFvjSeAQDHKbzgyxUXVC5AuU2fmw6pump?embed=1&theme=dark"></iframe>
+    </div>
+  </div>
+
+  <footer>KILROY WAS HERE 2025</footer>
+
+  <script>
+    const CA="DzuZqXyVzyBYFvjSeAQDHKbzgyxUXVC5AuU2fmw6pump";
+
+    const copyBtn = document.getElementById("copyCA");
+    if(copyBtn){
+      copyBtn.onclick=()=>{
+        navigator.clipboard.writeText(CA).then(()=>{
+          copyBtn.textContent="✅ Copied!";
+          setTimeout(()=>copyBtn.textContent="📋 Copy Contract",1800);
+        });
+      };
+    }
+
+    function animateNumber(el,start,end,duration=800,prefix="$",decimals=0,indicator=""){
+      const startTime=performance.now();
+      function update(now){
+        const progress=Math.min((now-startTime)/duration,1);
+        const val=start+(end-start)*progress;
+        el.textContent=prefix+val.toFixed(decimals)+indicator;
+        if(progress<1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    let lastPrice=null,lastMcap=null,lastVol=null,lastLiq=null;
+    function applyDelta(cur,last,el){
+      if(last===null) return "";
+      if(cur>last){el.parentElement.classList.add("flash-green","pulse");return " ↑";}
+      if(cur<last){el.parentElement.classList.add("flash-red","pulse");return " ↓";}
+      return "";
+    }
+    function clearFX(){
+      setTimeout(()=>document.querySelectorAll(".flash-green,.flash-red,.pulse")
+        .forEach(n=>n.classList.remove("flash-green","flash-red","pulse")),900);
+    }
+
+    async function fetchStats(){
+      try{
+        const r=await fetch(`https://api.dexscreener.com/latest/dex/tokens/${CA}`);
+        const d=await r.json(); if(!d.pairs?.length) return;
+        const p=d.pairs[0];
+        const price=+p.priceUsd, mcap=Math.round(p.fdv||0), vol=Math.round(p.volume.h24||0), liq=Math.round(p.liquidity.usd||0);
+
+        animateNumber(document.getElementById("tokenPrice"),lastPrice??price,price,800,"$",8,applyDelta(price,lastPrice,tokenPrice));
+        lastPrice=price;
+        animateNumber(document.getElementById("tokenMcap"),lastMcap??mcap,mcap,800,"$",0,applyDelta(mcap,lastMcap,tokenMcap));
+        lastMcap=mcap;
+        animateNumber(document.getElementById("tokenVol"),lastVol??vol,vol,800,"$",0,applyDelta(vol,lastVol,tokenVol));
+        lastVol=vol;
+        animateNumber(document.getElementById("tokenLiq"),lastLiq??liq,liq,800,"$",0,applyDelta(liq,lastLiq,tokenLiq));
+        lastLiq=liq;
+
+        clearFX();
+      }catch(e){console.error(e);}
+    }
+    fetchStats(); setInterval(fetchStats,30000);
+
+    const overlay=document.getElementById("chartOverlay");
+    document.getElementById("openChart").onclick=()=>overlay.classList.add("open");
+    document.getElementById("closeChart").onclick=()=>overlay.classList.remove("open");
+    overlay.onclick=e=>{if(e.target===overlay) overlay.classList.remove("open");};
+
+    const bar=document.getElementById("accordionBar");
+    const sheet=document.getElementById("accordionSheet");
+    let isOpen=false;
+    bar.onclick=()=>{
+      isOpen=!isOpen;
+      bar.setAttribute("aria-expanded", String(isOpen));
+      sheet.setAttribute("aria-hidden", String(!isOpen));
+      sheet.classList.toggle("open", isOpen);
+      if(isOpen){ sheet.style.maxHeight = sheet.scrollHeight + "px"; }
+      else{ sheet.style.maxHeight = "0px"; }
+    };
+  </script>
+</body>
+</html>
